@@ -1,0 +1,33 @@
+@import url(https://fonts.googleapis.com/css?family=Nunito);
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  padding-bottom: 3rem;
+  color: #5a5a5a;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  height: 100px;
+  width: 100%;
+  z-index: 300 !important;
+}
+
+#content {
+  margin-top: 110px;
+  margin-bottom: 110px;
+  padding: 0vw 10vw;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 100px;
+  color: #fff;
+}
