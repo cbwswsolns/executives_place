@@ -74,25 +74,7 @@ class UserControllerTest extends TestCase
      */
     public function userStoreTest()
     {
-        $request = $this->mock(StoreUserRequest::class, function (MockInterface $request) {
-            $request->shouldReceive('validated')
-                    ->once()
-                    ->andReturn([
-                        'name' => 'Tim Jones',
-                        'company_name' => 'Tim Jones Accountancy Ltd',
-                        'job_title' => 'Head Accountant',
-                        'phone' => '+44 7456 123456',
-                        'email' => 'timjones@example.com',
-                        'hourly_rate' => '55.00',
-                        'currency' => 'GBP'
-                    ]);
-        });
-
-        $userController = new UserController(new User());
-
-        $response = $userController->store($request);
-
-        $this->assertDatabaseHas('users', [
+        $data = [
             'name' => 'Tim Jones',
             'company_name' => 'Tim Jones Accountancy Ltd',
             'job_title' => 'Head Accountant',
@@ -100,7 +82,29 @@ class UserControllerTest extends TestCase
             'email' => 'timjones@example.com',
             'hourly_rate' => '55.00',
             'currency' => 'GBP'
-        ]);
+        ];
+
+        $request = $this->mock(
+            StoreUserRequest::class,
+            function (MockInterface $request) use ($data) {
+                $request->shouldReceive('validated')
+                        ->once()
+                        ->andReturn($data);
+            }
+        );
+
+        $user = $this->mock(
+            User::class,
+            function (MockInterface $user) use ($data) {
+                $user->shouldReceive('create')
+                     ->with($data)
+                     ->once();
+            }
+        );
+
+        $userController = new UserController($user);
+
+        $response = $userController->store($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
 
@@ -128,7 +132,7 @@ class UserControllerTest extends TestCase
             'currency' => 'GBP'
         ]);
 
-        // Create non-mocked request for test
+        /* Create non-mocked request for test (will bypass validation) */
         $request = ShowUserRequest::create('/users/1', 'GET', ['CUR' => 'USD']);
 
         // Force local driver as mock

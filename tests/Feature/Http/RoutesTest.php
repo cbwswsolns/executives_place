@@ -80,6 +80,16 @@ class RoutesTest extends TestCase
                         'currency' => 'GBP'
                     ]);
 
+        $this->assertDatabaseHas('users', [
+            'name' => 'Tim Jones',
+            'company_name' => 'Tim Jones Accountancy Ltd',
+            'job_title' => 'Head Accountant',
+            'phone' => '+44 7456 123456',
+            'email' => 'timjones@example.com',
+            'hourly_rate' => '55.00',
+            'currency' => 'GBP'
+        ]);
+
         $response->assertRedirect('users')
                  ->assertSessionHas('success', 'Executive profile created!');
     }
